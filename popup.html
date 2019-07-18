@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <head>
+        <style>
+            body {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 300px;
+                height: 88px;
+                padding: 8px;
+                outline: none;
+            }
+            .login {
+                display: none;
+            }
+            .user-wrap {
+                display: none;
+            }
+            .user {
+                display: flex;
+            }
+            .intro {
+                margin-bottom: 8px;
+                color: #209e85;
+                font-size: 14px;
+            }
+            .avatar {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+            }
+            .meta {
+                margin-left: 16px;
+            }
+            .nickname {
+                margin-bottom: 8px;
+                font-size: 16px;
+            }
+            .tip {
+                color: #666;
+                font-size: 14px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="login">
+            <div>你没有登录扇贝网，登录后可在任意网页双击查词。</div>
+            <a href="https://web.shanbay.com/web/account/login" target="_blank"
+                >去扇贝网登录</a
+            >
+        </div>
+        <div class="user-wrap">
+            <div class="intro">你已登陆扇贝网</div>
+            <div class="user">
+                <img src="" class="avatar" />
+                <div class="meta">
+                    <div class="nickname"></div>
+                    <div class="tip"></div>
+                </div>
+            </div>
+        </div>
+        <script src="popup.js"></script>
+    </body>
+</html>
