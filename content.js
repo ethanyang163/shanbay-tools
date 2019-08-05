@@ -13,6 +13,7 @@ const WORD_ENUMS = {
     'abbr.': '缩写',
     'num.': '量词',
     'defa.': '默认',
+    'aux. v.': '助动词',
     'int.': '未知', // come
     'infinmarker.': '未知' // to
 };
