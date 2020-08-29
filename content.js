@@ -15,7 +15,7 @@ const WORD_ENUMS = {
     'defa.': '默认',
     'aux. v.': '助动词',
     'int.': '未知', // come
-    'infinmarker.': '未知' // to
+    'infinmarker.': '未知', // to
 };
 
 function removeWordModal() {
@@ -37,7 +37,7 @@ function getWordViewOffset(wordView, x, y) {
     }
     return {
         top: top + document.documentElement.scrollTop,
-        left: left + document.documentElement.scrollLeft
+        left: left + document.documentElement.scrollLeft,
     };
 }
 
@@ -104,9 +104,7 @@ function wordView(e, wordModel) {
             const li = document.createElement('div');
             li.classList.add('li');
             enUl.appendChild(li);
-            li.innerHTML = `<em><b>${definitions.en[i].pos}</b></em> ${
-                definitions.en[i].def
-            }`;
+            li.innerHTML = `<em><b>${definitions.en[i].pos}</b></em> ${definitions.en[i].def}`;
         }
         const button = document.createElement('div');
         button.classList.add('collect');
@@ -119,15 +117,13 @@ function wordView(e, wordModel) {
 
         document.querySelector('.collect').addEventListener('click', event => {
             if (typeof chrome.app.isInstalled !== 'undefined') {
-                chrome.runtime.sendMessage({ wordId, wordIdInt }, function(
+                chrome.runtime.sendMessage({ wordId, wordIdInt }, function (
                     response
                 ) {
                     button.remove();
                     const a = document.createElement('a');
                     a.innerHTML = '已加入扇贝生词本，去扇贝网学习';
-                    a.href = `https://www.shanbay.com/review/learning/${
-                        response.data.ids[0]
-                    }/`;
+                    a.href = `https://web.shanbay.com/wordsweb/#/detail/${response.vocab_id}`;
                     a.setAttribute('target', '_blank');
                     wordModal.appendChild(a);
                 });
@@ -139,7 +135,7 @@ function wordView(e, wordModel) {
 function handleDbclick(e) {
     const word = window.getSelection().toString();
     if (/^[A-Za-z']+$/.test(word)) {
-        chrome.runtime.sendMessage({ word }, function(response) {
+        chrome.runtime.sendMessage({ word }, function (response) {
             wordView(e, response);
         });
     }

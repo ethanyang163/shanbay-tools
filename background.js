@@ -31,19 +31,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 business_id: 0,
                 vocab_id: request.wordId
             }
-        });
-    }
-    if (request.wordIdInt) {
-        const url = 'https://www.shanbay.com/api/v1/bdc/learning/';
-        bayFetch(url, {
-            method: 'POST',
-            body: {
-                vocabulary_ids: request.wordIdInt
-            }
         }).then(function(res) {
             sendResponse(res);
-        });
+        });;
     }
-
+    
     return true;
 });
