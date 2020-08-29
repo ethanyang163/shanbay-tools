@@ -1,7 +1,7 @@
 {
     "name": "扇贝学习工具",
-    "version": "1.0.2",
-    "description": "利用扇贝网提供的服务帮助自己学习英文",
+    "version": "1.0.3",
+    "description": "任意网页英文查词，可加入扇贝生词本",
     "permissions": ["activeTab"],
     "background": {
         "scripts": ["background.js"],
