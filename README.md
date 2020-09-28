@@ -8,7 +8,7 @@ https://chrome.google.com/webstore/detail/bjnljkdheccomghaakofdlbmgcjmckgo/publi
 
 ## 使用
 
-登录扇贝网后，在任意网页(不包括扇贝网)针对英文双击查词，将单词加入扇贝生词本和学习流程
+登录扇贝网后，在任意网页(不包括扇贝网)针对英文右击查词，将单词加入扇贝生词本和学习流程
 ![screenshot](/images/screenshot.png)
 
 ## 作者与许可
