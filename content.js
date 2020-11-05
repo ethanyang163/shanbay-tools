@@ -84,11 +84,22 @@ function wordView(e, wordModel) {
     wordContent.classList.add('word');
     wordContent.innerHTML = wordModel.content;
     wordModal.appendChild(wordContent);
-    const phoneticSymbol = document.createElement('div');
+    const phoneticWrap = document.createElement('div');
+    const phoneticSymbol = document.createElement('span');
     phoneticSymbol.classList.add('phonetic');
     phoneticSymbol.innerHTML =
       wordModel.audios[0].us.ipa && `/${wordModel.audios[0].us.ipa}/`;
     wordModal.appendChild(phoneticSymbol);
+
+    const speaker = document.createElement('span');
+    speaker.classList.add('speaker');
+    speaker.innerHTML = '🔉';
+
+    phoneticWrap.appendChild(phoneticSymbol);
+    phoneticWrap.appendChild(speaker);
+
+    wordModal.appendChild(phoneticWrap);
+
     const cnUl = document.createElement('div');
     cnUl.classList.add('ul');
     wordModal.appendChild(cnUl);
@@ -117,6 +128,13 @@ function wordView(e, wordModel) {
     document.body.appendChild(wordModal);
 
     postionElement(wordModal, e);
+
+    document.querySelector('.speaker').addEventListener('click', event => {
+      var audio = document.createElement('audio');
+      audio.src = wordModel.audios[0].us.urls[0];
+      audio.play();
+      event.stopPropagation();
+    });
 
     document.querySelector('.collect').addEventListener('click', event => {
       if (typeof chrome.app.isInstalled !== 'undefined') {
