@@ -30,6 +30,7 @@
 .speaker {
   margin-left: 10px;
   font-size: 20px;
+  cursor: pointer;
 }
 
 .modal-s > .ul {
