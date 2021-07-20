@@ -14,7 +14,7 @@ function bayFetch(url, config) {
 }
 
 bayFetch('https://apiv3.shanbay.com/bayuser/user').then(function (res) {
-  if (res.msg === '缺少user_id参数') {
+  if (res.msg === '登录信息过期') {
     document.querySelector('.login').style.display = 'block';
   } else {
     const avatar = document.querySelector('.avatar');

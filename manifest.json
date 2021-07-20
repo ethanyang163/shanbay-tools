@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "扇贝学习工具",
-  "version": "1.2.1",
+  "name": "扇贝查词",
+  "version": "1.2.2",
 
   "description": "任意网页英文查词，可加入扇贝生词本",
   "icons": {
@@ -13,7 +13,7 @@
 
   "browser_action": {
     "default_popup": "popup.html",
-    "default_title": "任意网页右击查词，可加入扇贝生词本",
+    "default_title": "扇贝查词",
     "default_icon": {
       "16": "images/shanbay.png",
       "32": "images/shanbay.png",
