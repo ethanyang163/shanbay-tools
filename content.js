@@ -1,28 +1,30 @@
 const WORD_ENUMS = {
-  'n.': '名词',
-  'pron.': '代词',
-  'adj.': '形容词',
-  'v.': '动词',
-  'vt.': '动词',
-  'adv.': '副词',
-  'conj.': '连词',
-  'prep.': '介词',
-  'auxv.': '助动词',
-  'art.': '冠词',
-  'article.': '冠词',
-  'abbr.': '缩写',
-  'num.': '量词',
-  'defa.': '默认',
-  'aux. v.': '助动词',
-  'phrase.': '短语',
-  'mod. v.': '情态动词',
-  'int.': '未知', // come
-  'infinmarker.': '不定词标记', // to
-  '.': '未知', // Gatsby
+  "n.": "名词",
+  "pron.": "代词",
+  "adj.": "形容词",
+  "v.": "动词",
+  "vt.": "动词",
+  "adv.": "副词",
+  "conj.": "连词",
+  "prep.": "介词",
+  "auxv.": "助动词",
+  "art.": "冠词",
+  "article.": "冠词",
+  "abbr.": "缩写",
+  "num.": "量词",
+  "defa.": "默认",
+  "aux. v.": "助动词",
+  "phrase.": "短语",
+  "mod. v.": "情态动词",
+  "linkv.": "连系动词",
+  "int.": "未知", // come
+  "infinmarker.": "不定词标记", // to
+  ".": "未知", // Gatsby
+  "un.": "未知", // workflow
 };
 
 function removeWordModal() {
-  const modal = document.querySelector('.modal-s');
+  const modal = document.querySelector(".modal-s");
   if (modal) {
     modal.remove();
   }
@@ -50,100 +52,110 @@ function postionElement(element, event) {
   element.style.left = `${position.left}px`;
 }
 
+document.addEventListener("click", (event) => {
+  removeWordModal();
+});
+
 function wordView(e, wordModel) {
   const { id: wordId, definitions, id_int: wordIdInt } = wordModel;
-  const wordModal = document.createElement('div');
-  document.addEventListener('click', event => {
-    if (
-      event.target.className !== 'modal-s' &&
-      event.target.className !== 'collect'
-    ) {
-      removeWordModal();
-    }
-  });
-  wordModal.classList.add('modal-s');
+  const wordModal = document.createElement("div");
+  wordModal.classList.add("modal-s");
+  const closeEle = document.createElement("div");
+  closeEle.classList.add("close-modal");
+  closeEle.innerHTML = "X";
+  wordModal.appendChild(closeEle);
   if (wordModel.msg) {
-    const errMsg = document.createElement('div');
-    errMsg.classList.add('error');
-    if (wordModel.msg === 'Unauthorized') {
+    const errMsg = document.createElement("div");
+    errMsg.classList.add("error");
+    if (wordModel.msg === "Unauthorized") {
       errMsg.innerHTML =
         '<a href="https://web.shanbay.com/web/account/login" target="_blank">去扇贝网登录</a>';
     }
-    if (wordModel.msg === 'Word not found') {
-      wordModal.style.alignItems = 'center';
+    if (wordModel.msg === "Word not found") {
+      wordModal.style.alignItems = "center";
       const image = new Image(200, 150);
-      image.src = chrome.extension.getURL('images/404.png');
+      image.src = chrome.extension.getURL("images/404.png");
       wordModal.appendChild(image);
-      errMsg.innerHTML = '没有在扇贝网中查到该词';
+      errMsg.innerHTML = "没有在扇贝网中查到该词";
     }
     wordModal.appendChild(errMsg);
     document.body.appendChild(wordModal);
     postionElement(wordModal, e);
   } else {
-    const wordContent = document.createElement('div');
-    wordContent.classList.add('word');
+    const wordContent = document.createElement("div");
+    wordContent.classList.add("word");
     wordContent.innerHTML = wordModel.content;
     wordModal.appendChild(wordContent);
-    const phoneticWrap = document.createElement('div');
-    const phoneticSymbol = document.createElement('span');
-    phoneticSymbol.classList.add('phonetic');
+    const phoneticWrap = document.createElement("div");
+    const phoneticSymbol = document.createElement("span");
+    phoneticSymbol.classList.add("phonetic");
     phoneticSymbol.innerHTML =
       wordModel.audios[0].us.ipa && `/${wordModel.audios[0].us.ipa}/`;
     wordModal.appendChild(phoneticSymbol);
 
-    const speaker = document.createElement('span');
-    speaker.classList.add('speaker');
-    speaker.innerHTML = '🔉';
+    const speaker = document.createElement("span");
+    speaker.classList.add("speaker");
+    speaker.innerHTML = "🔉";
 
     phoneticWrap.appendChild(phoneticSymbol);
     phoneticWrap.appendChild(speaker);
 
     wordModal.appendChild(phoneticWrap);
 
-    const cnUl = document.createElement('div');
-    cnUl.classList.add('ul');
+    const cnUl = document.createElement("div");
+    cnUl.classList.add("ul");
     wordModal.appendChild(cnUl);
     for (let i = 0; i < definitions.cn.length; i++) {
-      const li = document.createElement('div');
-      li.classList.add('li');
+      const li = document.createElement("div");
+      li.classList.add("li");
       cnUl.appendChild(li);
       li.innerHTML = `【<b>${WORD_ENUMS[definitions.cn[i].pos]}</b>】 ${
         definitions.cn[i].def
       }`;
     }
-    const enUl = document.createElement('div');
+    const enUl = document.createElement("div");
     wordModal.appendChild(enUl);
-    enUl.classList.add('ul');
+    enUl.classList.add("ul");
     for (let i = 0; i < definitions.en.length; i++) {
-      const li = document.createElement('div');
-      li.classList.add('li');
+      const li = document.createElement("div");
+      li.classList.add("li");
       enUl.appendChild(li);
       li.innerHTML = `<em><b>${definitions.en[i].pos}</b></em> ${definitions.en[i].def}`;
     }
-    const button = document.createElement('div');
-    button.classList.add('collect');
-    button.innerHTML = '+添加到扇贝生词本';
+    const button = document.createElement("div");
+    button.classList.add("collect");
+    button.innerHTML = "+添加到扇贝生词本";
     wordModal.appendChild(button);
 
     document.body.appendChild(wordModal);
 
     postionElement(wordModal, e);
 
-    document.querySelector('.speaker').addEventListener('click', event => {
-      var audio = document.createElement('audio');
+    document.querySelector(".speaker").addEventListener("click", (event) => {
+      var audio = document.createElement("audio");
       audio.src = wordModel.audios[0].us.urls[0];
       audio.play();
       event.stopPropagation();
     });
 
-    document.querySelector('.collect').addEventListener('click', event => {
-      if (typeof chrome.app.isInstalled !== 'undefined') {
+    document.querySelector(".modal-s").addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+
+    document
+      .querySelector(".close-modal")
+      .addEventListener("click", (event) => {
+        removeWordModal();
+      });
+
+    document.querySelector(".collect").addEventListener("click", (event) => {
+      if (typeof chrome.app.isInstalled !== "undefined") {
         chrome.runtime.sendMessage({ wordId, wordIdInt }, function (response) {
           button.remove();
-          const a = document.createElement('a');
-          a.innerHTML = '已加入扇贝生词本，去扇贝网学习';
+          const a = document.createElement("a");
+          a.innerHTML = "已加入扇贝生词本，去扇贝网学习";
           a.href = `https://web.shanbay.com/wordsweb/#/detail/${response.vocab_id}`;
-          a.setAttribute('target', '_blank');
+          a.setAttribute("target", "_blank");
           wordModal.appendChild(a);
         });
       }
@@ -166,14 +178,14 @@ chrome.storage.sync.get(
   },
   function (items) {
     if (items.isDbclickOn) {
-      document.body.addEventListener('dblclick', handleDbclick);
+      document.body.addEventListener("dblclick", handleDbclick);
     }
   }
 );
 
 let ev = null;
 
-document.body.addEventListener('contextmenu', function (e) {
+document.body.addEventListener("contextmenu", function (e) {
   ev = e;
 });
 

@@ -6,10 +6,10 @@
   box-sizing: border-box;
   border-radius: 10px;
   width: 380px;
-  font-family: 'SF Pro SC', 'HanHei SC', 'SF Pro Text', 'Myriad Set Pro',
-    system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'SF Pro Icons',
-    'Apple Legacy Icons', 'PingFang SC', 'Helvetica Neue', 'Helvetica', 'Arial',
-    sans-serif, 'Arial', sans-serif;
+  font-family: "SF Pro SC", "HanHei SC", "SF Pro Text", "Myriad Set Pro",
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "SF Pro Icons",
+    "Apple Legacy Icons", "PingFang SC", "Helvetica Neue", "Helvetica", "Arial",
+    sans-serif, "Arial", sans-serif;
   font-size: 14px;
   box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.14);
   border: solid 0.5px #e0e0e0;
@@ -20,6 +20,15 @@
   min-height: 200px;
   max-height: 400px;
   overflow-y: scroll;
+}
+
+.close-modal {
+  position: absolute;
+  width: 20px;
+  right: 12px;
+  top: 12px;
+  text-align: center;
+  cursor: pointer;
 }
 
 .word {
