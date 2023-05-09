@@ -23,13 +23,6 @@ const WORD_ENUMS = {
   "un.": "未知", // workflow
 };
 
-function removeWordModal() {
-  const modal = document.querySelector(".modal-s");
-  if (modal) {
-    modal.remove();
-  }
-}
-
 function getWordViewOffset(wordView, x, y) {
   const rect = wordView.getBoundingClientRect();
   let top = y;
@@ -46,32 +39,32 @@ function getWordViewOffset(wordView, x, y) {
   };
 }
 
-function postionElement(element, event) {
-  const position = getWordViewOffset(element, event.clientX, event.clientY);
-  element.style.top = `${position.top}px`;
-  element.style.left = `${position.left}px`;
+function setElementPosition(element, position) {
+  const { top, left } = getWordViewOffset(element, position.x, position.y);
+  element.style.top = `${top}px`;
+  element.style.left = `${left}px`;
 }
 
-document.addEventListener("click", (event) => {
-  removeWordModal();
-});
+function wordView(position, response) {
+  if (!response) {
+    return;
+  }
 
-function wordView(e, wordModel) {
-  const { id: wordId, definitions, id_int: wordIdInt } = wordModel;
+  const { id: wordId, definitions, id_int: wordIdInt } = response;
   const wordModal = document.createElement("div");
   wordModal.classList.add("modal-s");
   const closeEle = document.createElement("div");
   closeEle.classList.add("close-modal");
   closeEle.innerHTML = "X";
   wordModal.appendChild(closeEle);
-  if (wordModel.msg) {
+  if (response.msg) {
     const errMsg = document.createElement("div");
     errMsg.classList.add("error");
-    if (wordModel.msg === "Unauthorized") {
+    if (response.msg === "登录信息过期") {
       errMsg.innerHTML =
         '<a href="https://web.shanbay.com/web/account/login" target="_blank">去扇贝网登录</a>';
     }
-    if (wordModel.msg === "Word not found") {
+    if (response.msg === "单词没找到") {
       wordModal.style.alignItems = "center";
       const image = new Image(200, 150);
       image.src = chrome.extension.getURL("images/404.png");
@@ -80,17 +73,17 @@ function wordView(e, wordModel) {
     }
     wordModal.appendChild(errMsg);
     document.body.appendChild(wordModal);
-    postionElement(wordModal, e);
+    setElementPosition(wordModal, position);
   } else {
     const wordContent = document.createElement("div");
     wordContent.classList.add("word");
-    wordContent.innerHTML = wordModel.content;
+    wordContent.innerHTML = response.content;
     wordModal.appendChild(wordContent);
     const phoneticWrap = document.createElement("div");
     const phoneticSymbol = document.createElement("span");
     phoneticSymbol.classList.add("phonetic");
     phoneticSymbol.innerHTML =
-      wordModel.audios[0].us.ipa && `/${wordModel.audios[0].us.ipa}/`;
+      response.audios[0].us.ipa && `/${response.audios[0].us.ipa}/`;
     wordModal.appendChild(phoneticSymbol);
 
     const speaker = document.createElement("span");
@@ -129,11 +122,11 @@ function wordView(e, wordModel) {
 
     document.body.appendChild(wordModal);
 
-    postionElement(wordModal, e);
+    setElementPosition(wordModal, position);
 
     document.querySelector(".speaker").addEventListener("click", (event) => {
       var audio = document.createElement("audio");
-      audio.src = wordModel.audios[0].us.urls[0];
+      audio.src = response.audios[0].us.urls[0];
       audio.play();
       event.stopPropagation();
     });
@@ -163,25 +156,42 @@ function wordView(e, wordModel) {
   }
 }
 
-function handleDbclick(e) {
-  const word = window.getSelection().toString();
-  if (/^[A-Za-z']+$/.test(word)) {
-    chrome.runtime.sendMessage({ word }, function (response) {
-      wordView(e, response);
-    });
-  }
+// ===== 划动选中事件 =====
+
+function handleSelect() {
+  const selection = window.getSelection();
+  const range = selection.getRangeAt(0);
+  const rect = range.getBoundingClientRect();
+  const word = selection.toString();
+  chrome.runtime.sendMessage({ word }, function (response) {
+    wordView({ x: rect.x, y: rect.y + 10 }, response);
+  });
+}
+
+function debounce(fn, delay) {
+  let timer = null;
+
+  return function () {
+    const ctx = this;
+    const args = arguments;
+
+    clearTimeout(timer);
+
+    timer = setTimeout(() => {
+      fn.apply(ctx, args);
+    }, delay);
+  };
 }
 
 chrome.storage.sync.get(
-  {
-    isDbclickOn: false,
-  },
-  function (items) {
-    if (items.isDbclickOn) {
-      document.body.addEventListener("dblclick", handleDbclick);
-    }
+  ["isSelectOn"],
+  ({ isSelectOn }) => {
+    isSelectOn &&
+      document.addEventListener("selectionchange", debounce(handleSelect, 500));
   }
 );
+
+// ===== 右键菜单事件 =====
 
 let ev = null;
 
@@ -189,6 +199,19 @@ document.body.addEventListener("contextmenu", function (e) {
   ev = e;
 });
 
-chrome.extension.onMessage.addListener(function (msg, sender, sendResponse) {
+chrome.extension.onMessage.addListener(function (msg) {
   wordView(ev, msg.res);
+});
+
+// ===== 点击事件 =====
+
+function removeWordModal() {
+  const modal = document.querySelector(".modal-s");
+  if (modal) {
+    modal.remove();
+  }
+}
+
+document.addEventListener("click", () => {
+  removeWordModal();
 });
