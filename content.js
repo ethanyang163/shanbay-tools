@@ -164,8 +164,9 @@ function wordView(e, wordModel) {
 }
 
 function handleDbclick(e) {
-  const word = window.getSelection().toString();
+  const word = window.getSelection().toString().trim();
   if (/^[A-Za-z']+$/.test(word)) {
+
     chrome.runtime.sendMessage({ word }, function (response) {
       wordView(e, response);
     });
